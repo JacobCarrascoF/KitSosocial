@@ -358,6 +358,20 @@ body[data-view="guitarra"] { --acc-soft: var(--guitarra-soft); }
 .kofi:hover { opacity: .9; }
 .foot p { margin: 0; }
 @media print { .support { display: none !important; } }
+/* ---------- Pantalla de código ---------- */
+body.locked > .top, body.locked > .progbar, body.locked > main, body.locked > footer { display: none !important; }
+.lock { min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 24px 18px; }
+.lockbox { width: 100%; max-width: 420px; }
+.lockhead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 36px; }
+.lockhead .brand { margin: 0; }
+.lock h1 { color: var(--ink); margin-bottom: 8px; }
+.lock p { color: var(--muted); }
+#lockForm { display: flex; gap: 8px; margin-top: 18px; }
+#lockInput { flex: 1; min-width: 0; font: 800 1.4rem/1 "Bricolage Grotesque", Arial, sans-serif; letter-spacing: .08em; text-transform: uppercase; padding: 12px 14px; border: 2px solid var(--ink); border-radius: 12px; background: var(--card); color: var(--ink); }
+#lockForm button { border-radius: 12px; padding: 0 20px; font-size: 1.05rem; }
+.lockmsg { min-height: 1.5em; color: var(--err) !important; font-weight: 700; }
+.locksupport { display: inline-block; margin-top: 28px; color: var(--muted); font-size: .9rem; }
+.linkbtn { border: 0; padding: 0; background: none; color: var(--muted); text-decoration: underline; font-size: inherit; border-radius: 0; }
 .foot { color: var(--muted); font-size: .85rem; padding-top: 18px; padding-bottom: 30px; border-top: 1px solid var(--line); }
 
 @media (max-width: 600px) {

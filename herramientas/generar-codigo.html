@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Kit Sosocial · Generar código</title>
+<style>
+  body { font: 16px/1.5 system-ui, Arial, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 18px; color: #1C2230; }
+  h1 { font-size: 1.6rem; margin-bottom: .2rem; }
+  label { display: block; margin: 14px 0 4px; font-weight: 700; }
+  input[type=text], input[type=date] { font: inherit; padding: 8px 10px; border: 1.5px solid #9AA1AC; border-radius: 8px; width: 100%; box-sizing: border-box; }
+  .packs label { display: inline-flex; gap: 6px; font-weight: 400; margin-right: 18px; }
+  button { font: inherit; font-weight: 700; margin-top: 18px; padding: 10px 18px; border: 0; border-radius: 999px; background: #1C2230; color: #fff; cursor: pointer; }
+  pre { background: #F3F5F8; padding: 14px; border-radius: 10px; white-space: pre-wrap; word-break: break-all; }
+  .hint { color: #5B6474; font-size: .9rem; }
+</style>
+</head>
+<body>
+<h1>Generar un código de acceso</h1>
+<p class="hint">Esta página no guarda nada ni envía nada: solo calcula la «huella» del código para que puedas pegarla en <b>js/nucleo/config.js</b> sin que el código se vea.</p>
+
+<label for="code">Código (solo letras y números; no distingue mayúsculas)</label>
+<input type="text" id="code" placeholder="por ejemplo: GUITARRA24">
+<label for="name">Para quién es (solo lo ves tú)</label>
+<input type="text" id="name" placeholder="por ejemplo: Grupo martes 17 h">
+<label>Qué incluye</label>
+<div class="packs">
+  <label><input type="checkbox" value="basico" checked> Pack básico (todo lo actual)</label>
+  <label><input type="checkbox" value="premium"> Pack premium (futuro)</label>
+</div>
+<label for="until">Caduca el (opcional)</label>
+<input type="date" id="until">
+<button type="button" id="go">Generar</button>
+
+<div id="out" hidden>
+  <p><b>1.</b> Copia esta línea y pégala dentro de <code>codigos: [ … ]</code> en <b>js/nucleo/config.js</b>:</p>
+  <pre id="line"></pre>
+  <button type="button" id="copy">Copiar</button>
+  <p><b>2.</b> Sube el número de versión en <b>sw.js</b> y guarda los cambios en GitHub.</p>
+  <p><b>3.</b> Da a tus alumnos el código: <b id="plain"></b></p>
+</div>
+
+<script src="../js/nucleo/sha256.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  $('go').onclick = () => {
+    const code = KS.normCode($('code').value);
+    if (code.length < 4) { alert('El código debe tener al menos 4 letras o números.'); return; }
+    const packs = [...document.querySelectorAll('.packs input:checked')].map(i => "'" + i.value + "'");
+    const name = ($('name').value || 'Sin nombre').replace(/'/g, '’');
+    $('line').textContent = `{ nombre: '${name}', huella: '${KS.codeHash(code)}', packs: [${packs.join(', ')}], hasta: '${$('until').value || ''}' },`;
+    $('plain').textContent = code;
+    $('out').hidden = false;
+  };
+  $('copy').onclick = () => navigator.clipboard.writeText($('line').textContent).then(() => { $('copy').textContent = 'Copiado'; });
+</script>
+</body>
+</html>

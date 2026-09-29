@@ -149,10 +149,60 @@
     document.getElementById('support').hidden = false;
   }
 
+  /* ---------- Acceso con código (se configura en js/nucleo/config.js) ---------- */
+  const ACC = (KS.CONFIG && KS.CONFIG.acceso) || { activo: false, codigos: [] };
+  const CODE_KEY = 'kit-sosocial-codigo';
+  const today = () => new Date().toISOString().slice(0, 10);
+  const findCode = h => (ACC.codigos || []).find(c => c.huella === h);
+  const expired = c => !!(c && c.hasta && c.hasta < today());
+  KS.access = { packs: [] };
+  function loadAccess() {
+    if (!ACC.activo) { KS.access.packs = ['*']; return 'ok'; }
+    let h = null; try { h = localStorage.getItem(CODE_KEY); } catch (e) {}
+    const c = h && findCode(h);
+    if (!c) return h ? 'err' : 'none';
+    if (expired(c)) return 'expired';
+    KS.access.packs = c.packs || ['basico'];
+    return 'ok';
+  }
+  KS.hasPack = p => KS.access.packs.includes('*') || KS.access.packs.includes(p);
+  const lock = document.getElementById('lock');
+  function showLock(reason) {
+    KS.transport.stop();
+    document.body.classList.add('locked');
+    lock.hidden = false;
+    const msg = document.getElementById('lockMsg');
+    msg.textContent = reason === 'expired' ? t('lock_expired') : '';
+    const sup = document.getElementById('lockSupport');
+    if (KS.CONFIG.donar && !KS.CONFIG.donar.includes('TU-USUARIO')) sup.href = KS.CONFIG.donar; else sup.hidden = true;
+    setTimeout(() => document.getElementById('lockInput').focus(), 50);
+  }
+  function unlock() {
+    document.body.classList.remove('locked');
+    lock.hidden = true;
+    route();
+  }
+  document.getElementById('lockForm').onsubmit = (e) => {
+    e.preventDefault();
+    const input = document.getElementById('lockInput'), msg = document.getElementById('lockMsg');
+    const h = KS.codeHash(input.value), c = findCode(h);
+    if (!KS.normCode(input.value) || !c) { msg.textContent = t('lock_err'); input.select(); return; }
+    if (expired(c)) { msg.textContent = t('lock_expired'); return; }
+    try { localStorage.setItem(CODE_KEY, h); } catch (err) {}
+    KS.access.packs = c.packs || ['basico'];
+    input.value = ''; msg.textContent = '';
+    unlock();
+  };
+  const logout = document.getElementById('logout');
+  if (!ACC.activo) logout.parentNode.removeChild(logout);
+  else logout.onclick = () => { try { localStorage.removeItem(CODE_KEY); } catch (e) {} KS.access.packs = []; showLock(); window.scrollTo(0, 0); };
+
   /* ---------- Arranque ---------- */
   setLang(st.lang);
   syncMini();
-  route();
+  const acc = loadAccess();
+  if (acc === 'ok' && KS.hasPack('basico')) route();
+  else { current = 'piano'; showLock(acc); }
 
   if ('serviceWorker' in navigator && location.protocol === 'https:' && !window.KS_PREVIEW) {
     // Si hay una versión nueva, se instala y la página se recarga sola una vez

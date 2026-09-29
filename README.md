@@ -39,13 +39,25 @@ Al abrirlo, la app aparece directamente con esa progresión.
 
 Una vez instalada funciona sin internet.
 
+## Códigos de acceso
+
+La app pide un código la primera vez que se abre en cada móvil u ordenador. Después lo recuerda.
+
+**Crear un código nuevo** (por ejemplo, uno por grupo o por curso):
+1. Abre `https://TU-DOMINIO/herramientas/generar-codigo.html` (o haz doble clic en `herramientas/generar-codigo.html` en tu ordenador).
+2. Escribe el código, para quién es, qué pack incluye y, si quieres, cuándo caduca. Pulsa **Generar**.
+3. Copia la línea que aparece y pégala dentro de `codigos: [ … ]` en `js/nucleo/config.js`.
+4. Sube el número de versión en `sw.js` y guarda los cambios en GitHub.
+
+**Quitar un código:** borra su línea de `config.js`. Quien lo usaba tendrá que introducir uno nuevo.
+
+**Abrir la app a todo el mundo:** en `config.js`, cambia `activo: true` por `activo: false`.
+
+En `config.js` nunca aparece el código en claro, solo su «huella». Aun así, es una protección pensada para uso en clase: alguien con conocimientos técnicos podría saltársela. Para contenido de pago más adelante habrá que usar un sistema con cuentas de usuario.
+
 ## Activar las donaciones (Ko-fi)
 
-1. Abre `js/nucleo/config.js` (en GitHub: pulsa el archivo y luego el lápiz ✏️ para editarlo).
-2. Cambia `TU-USUARIO` por tu usuario de Ko-fi, por ejemplo `'https://ko-fi.com/sosocial'`.
-3. Pulsa **Commit changes** y sube la versión en `sw.js`.
-
-El botón «Apoyar en Ko-fi» aparece al pie de todas las secciones. Mientras ponga `TU-USUARIO`, no se muestra.
+El enlace está en `js/nucleo/config.js` (`donar: 'https://ko-fi.com/sosocial'`). El botón aparece al pie de todas las secciones y en la pantalla del código.
 
 ## Actualizar la app
 

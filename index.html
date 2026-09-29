@@ -18,6 +18,25 @@
 </head>
 <body data-view="piano">
 
+<div class="lock" id="lock" hidden>
+  <div class="lockbox">
+    <div class="lockhead">
+      <span class="brand"><span class="logo" aria-hidden="true"></span>Kit Sosocial</span>
+      <div class="lang" role="group" aria-label="Idioma">
+        <button type="button" data-lang="es">ES</button><button type="button" data-lang="ca">CA</button>
+      </div>
+    </div>
+    <h1 data-i18n="lock_title">Introduce tu código</h1>
+    <p data-i18n="lock_desc">Kit Sosocial es para el alumnado de las clases. Pide el código a tu profesor o profesora.</p>
+    <form id="lockForm" autocomplete="off">
+      <input id="lockInput" type="text" inputmode="text" autocapitalize="characters" autocorrect="off" spellcheck="false" data-i18n-aria="lock_title" aria-describedby="lockMsg">
+      <button type="submit" class="primary" data-i18n="lock_btn">Entrar</button>
+    </form>
+    <p class="lockmsg" id="lockMsg" role="alert"></p>
+    <a class="locksupport" id="lockSupport" href="https://ko-fi.com/sosocial" target="_blank" rel="noopener" data-i18n="lock_support">¿Te gusta el proyecto? Apóyalo en Ko-fi</a>
+  </div>
+</div>
+
 <header class="top">
   <div class="bar1 wrap">
     <a class="brand" href="#piano"><span class="logo" aria-hidden="true"></span>Kit Sosocial</a>
@@ -63,10 +82,11 @@
     <p data-i18n="support_text">Kit Sosocial es gratuito. Si te resulta útil, puedes apoyar el proyecto.</p>
     <a class="kofi" id="supportLink" href="#" target="_blank" rel="noopener"><span aria-hidden="true">☕</span> <span data-i18n="support_btn">Apoyar en Ko-fi</span></a>
   </div>
-  <p data-i18n="footer">Kit Sosocial</p>
+  <p><span data-i18n="footer">Kit Sosocial</span> · <button type="button" class="linkbtn" id="logout" data-i18n="logout">Cambiar de código</button></p>
 </footer>
 
 <script src="js/nucleo/config.js"></script>
+<script src="js/nucleo/sha256.js"></script>
 <script src="js/nucleo/estado.js"></script>
 <script src="js/nucleo/idioma.js"></script>
 <script src="js/nucleo/acordes.js"></script>

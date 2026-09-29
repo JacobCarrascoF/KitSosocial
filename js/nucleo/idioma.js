@@ -67,6 +67,9 @@
       g_outlevel: 'fuera de los niveles elegidos', g_bass_should: 'el bajo debería ser {n}',
       g_strum: 'Rasgueo', strum_bar: 'Uno por acorde', strum_beat: 'En cada pulso', g_choose: 'Diagrama',
       support_text: 'Kit Sosocial es gratuito. Si te resulta útil, puedes apoyar el proyecto.', support_btn: 'Apoyar en Ko-fi',
+      lock_title: 'Introduce tu código', lock_desc: 'Kit Sosocial es para el alumnado de las clases. Pide el código a tu profesor o profesora.',
+      lock_btn: 'Entrar', lock_err: 'Ese código no es correcto. Revísalo o pídelo de nuevo.', lock_expired: 'Tu código ha caducado. Pide uno nuevo a tu profesor o profesora.',
+      lock_support: '¿Te gusta el proyecto? Apóyalo en Ko-fi', logout: 'Cambiar de código',
       footer: 'Kit Sosocial · herramientas para las clases de música'
     },
     ca: {
@@ -135,6 +138,9 @@
       g_outlevel: 'fora dels nivells triats', g_bass_should: 'el baix hauria de ser {n}',
       g_strum: 'Rasgueig', strum_bar: 'Un per acord', strum_beat: 'A cada pols', g_choose: 'Diagrama',
       support_text: 'Kit Sosocial és gratuït. Si et resulta útil, pots donar suport al projecte.', support_btn: 'Donar suport a Ko-fi',
+      lock_title: 'Introdueix el teu codi', lock_desc: "Kit Sosocial és per a l'alumnat de les classes. Demana el codi al teu professor o professora.",
+      lock_btn: 'Entrar', lock_err: "Aquest codi no és correcte. Revisa'l o demana'l de nou.", lock_expired: "El teu codi ha caducat. Demana'n un de nou al teu professor o professora.",
+      lock_support: "T'agrada el projecte? Dona-li suport a Ko-fi", logout: 'Canviar de codi',
       footer: 'Kit Sosocial · eines per a les classes de música'
     }
   };
