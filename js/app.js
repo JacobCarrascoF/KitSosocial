@@ -155,6 +155,15 @@
   route();
 
   if ('serviceWorker' in navigator && location.protocol === 'https:' && !window.KS_PREVIEW) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    // Si hay una versión nueva, se instala y la página se recarga sola una vez
+    const hadController = !!navigator.serviceWorker.controller;
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (hadController && !reloaded) { reloaded = true; location.reload(); }
+    });
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
+      reg.update();
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') reg.update(); });
+    }).catch(() => {});
   }
 })(window.KS);

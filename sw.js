@@ -1,6 +1,6 @@
 /* Kit Sosocial — service worker: guarda la app para que funcione sin internet.
    IMPORTANTE: cada vez que subas cambios, sube el número de VERSION para que los móviles descarguen la nueva versión. */
-const VERSION = 'kit-sosocial-v5';
+const VERSION = 'kit-sosocial-v6';
 const FILES = [
   './', './index.html', './manifest.webmanifest', './css/estilos.css',
   './js/nucleo/config.js', './js/nucleo/estado.js', './js/nucleo/idioma.js', './js/nucleo/acordes.js', './js/nucleo/audio.js',
@@ -24,6 +24,11 @@ self.addEventListener('fetch', e => {
     return;
   }
   if (url.origin !== location.origin) return;
-  // La página se pide ignorando ?acordes=... para que los enlaces compartidos funcionen sin internet
-  e.respondWith(caches.match(req, { ignoreSearch: req.mode === 'navigate' }).then(hit => hit || fetch(req)));
+  // Primero internet (así siempre llega la última versión); si no hay conexión, lo guardado
+  e.respondWith(
+    fetch(req).then(res => {
+      if (res && res.ok) { const copy = res.clone(); caches.open(VERSION).then(c => c.put(req, copy)); }
+      return res;
+    }).catch(() => caches.match(req, { ignoreSearch: req.mode === 'navigate' }).then(hit => hit || caches.match('./index.html')))
+  );
 });
