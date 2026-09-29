@@ -1,0 +1,17 @@
+{
+  "name": "Kit Sosocial",
+  "short_name": "Kit Sosocial",
+  "description": "Herramientas para las clases de música: piano, guitarra, bajo, metrónomo y diccionario.",
+  "lang": "es",
+  "start_url": "./#piano",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1C2230",
+  "icons": [
+    { "src": "iconos/icono-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "iconos/icono-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "iconos/icono-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
