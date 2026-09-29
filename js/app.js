@@ -90,7 +90,7 @@
   /* ---------- Compartir ---------- */
   function shareUrl() {
     const base = location.href.split('?')[0].split('#')[0];
-    return base + '?acordes=' + st.chords.map(encodeURIComponent).join(',') + '&bpm=' + st.bpm + '&lang=' + st.lang + '#' + (current || 'piano');
+    return base + '?acordes=' + st.chords.map(encodeURIComponent).join(',') + '&bpm=' + st.bpm + '&lang=' + st.lang + '#' + (current || location.hash.replace('#', '') || 'piano');
   }
   function updateUrl() {
     try { history.replaceState(null, '', shareUrl()); } catch (e) {}

@@ -135,7 +135,8 @@
   }
   function syncButtons() {
     const T = KS.transport;
-    document.querySelectorAll('[data-playpath]').forEach(b => {
+    if (document.body.dataset.view !== 'piano') return;
+    document.querySelectorAll('#view [data-playpath]').forEach(b => {
       const on = T.playing && T.owner === 'piano:' + b.dataset.playpath;
       b.textContent = on ? t('stop') : t('play');
       b.classList.toggle('on', on);

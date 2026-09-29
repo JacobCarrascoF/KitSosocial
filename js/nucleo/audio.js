@@ -37,6 +37,18 @@
     notes.forEach(m => tone(m, when, dur, 0.09));
     if (bass != null) tone(bass, when, dur, 0.14);
   }
+  function bass(m, t, d) {
+    ctx();
+    const when = t == null ? ac.currentTime : t, dur = d || 0.6;
+    const f = 440 * Math.pow(2, (m - 69) / 12);
+    const o = ac.createOscillator(), o2 = ac.createOscillator(), mix = ac.createGain(), lp = ac.createBiquadFilter(), g = ac.createGain();
+    o.type = 'sawtooth'; o.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f;
+    mix.gain.value = 0.45; o.connect(mix); mix.connect(lp); o2.connect(lp);
+    lp.type = 'lowpass'; lp.frequency.setValueAtTime(1600, when); lp.frequency.exponentialRampToValueAtTime(380, when + 0.25);
+    g.gain.setValueAtTime(0, when); g.gain.linearRampToValueAtTime(0.3, when + 0.008); g.gain.exponentialRampToValueAtTime(0.001, when + dur);
+    lp.connect(g); g.connect(master);
+    o.start(when); o2.start(when); o.stop(when + dur + 0.05); o2.stop(when + dur + 0.05);
+  }
   // nivel: 2 = primer tiempo, 1.5 = acento secundario, 1 = pulso, 0 = subdivisión
   function click(t, level) {
     const o = ac.createOscillator(), g = ac.createGain();
@@ -56,7 +68,7 @@
     setTimeout(() => { try { old.disconnect(); } catch (e) {} }, 200);
     newMaster();
   }
-  KS.audio = { ctx, chord, click, hush };
+  KS.audio = { ctx, chord, bass, click, hush };
 
   /* ---------- Transporte: un único reloj para el metrónomo y para escuchar progresiones ---------- */
   const T = { playing: false, mode: null, owner: null };
@@ -78,15 +90,17 @@
       if (T.mode === 'metro' || st.clickOn || counting) click(t, lvl);
       const b = beat, br = bar;
       ui(t, () => KS.emit('beat', { beat: b, bar: br, counting, beats: st.beats }));
-      if (T.mode === 'prog' && beat === 0 && !counting) {
-        const pb = bar - T.countInBars;
-        if (pb % st.barsPerChord === 0) {
-          const k = pb / st.barsPerChord;
-          const s = opts.steps[k];
-          if (s) {
-            const dur = st.barsPerChord * st.beats * 60 / st.bpm;
-            chord(s.notes, s.bass, t, dur * 0.97);
-            ui(t, () => { if (opts && opts.onStep) opts.onStep(k); });
+      if (T.mode === 'prog' && !counting) {
+        const pb = bar - T.countInBars, k = Math.floor(pb / st.barsPerChord), s = opts.steps[k];
+        const within = (pb % st.barsPerChord) * st.beats + beat;
+        if (s) {
+          if (within === 0) ui(t, () => { if (opts && opts.onStep) opts.onStep(k); });
+          if (s.seq) {
+            const m = s.seq[within];
+            if (m != null) bass(m, t, 60 / st.bpm * 0.92);
+            ui(t, () => { if (opts && opts.onBeat) opts.onBeat(k, within); });
+          } else if (within === 0) {
+            chord(s.notes, s.bass, t, st.barsPerChord * st.beats * 60 / st.bpm * 0.97);
           }
         }
       }

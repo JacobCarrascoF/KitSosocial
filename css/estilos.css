@@ -197,6 +197,53 @@ body[data-view="piano"] .step.playing { background: var(--piano-soft); }
 .trainer legend { padding: 0 6px; font-weight: 700; }
 .trrow { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: .95rem; }
 
+/* ---------- Bajo ---------- */
+body[data-view="bajo"] { --acc-soft: var(--bajo-soft); }
+:root { --bajo-soft: #E0F2F1; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bajo-soft: #123634; } }
+:root[data-theme="dark"] { --bajo-soft: #123634; }
+.pos { display: inline-block; font: 700 .78em/1.4 Consolas, "Courier New", monospace; letter-spacing: .02em; background: var(--soft); border: 1px solid var(--line); color: var(--ink); border-radius: 5px; padding: 0 5px; }
+.poslegend { font-size: .95rem; }
+.bsteps { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.fb { display: block; width: 100%; height: auto; }
+.fb-str { stroke: var(--wk-line); }
+.fb-fret { stroke: var(--line); stroke-width: 1.2; }
+.fb-nut { fill: var(--ink); }
+.fb-lbl, .fb-num { fill: var(--muted); font: 7px Arial, sans-serif; }
+.fb-alt { fill: var(--bg); stroke: var(--bajo); stroke-width: 1.4; stroke-dasharray: 2 1.5; cursor: pointer; }
+.fb-root circle { fill: var(--bajo); }
+.fb-root text { fill: #fff; }
+.fb-tone circle { fill: var(--bajo-soft); stroke: var(--bajo); stroke-width: 1.4; }
+.fb-tone text { fill: var(--ink); }
+.fb-app circle { fill: var(--bg); stroke: var(--muted); stroke-width: 1.4; stroke-dasharray: 2 1.5; }
+.fb-app text { fill: var(--muted); }
+.fb text { font: 700 7.5px Arial, sans-serif; pointer-events: none; }
+:root[data-theme="dark"] .fb-root text { fill: #0B0D12; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .fb-root text { fill: #0B0D12; } }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.chip { font-size: .8rem; border-radius: 999px; padding: 2px 8px; background: var(--soft); border: 1px solid var(--line); display: inline-flex; gap: 5px; align-items: center; }
+button.chip { cursor: pointer; }
+.chip b { color: var(--bajo); }
+.chip.t1 { border-color: var(--bajo); }
+.chip.ta { border-style: dashed; }
+.chip .pos { font-size: .72rem; }
+.sw-tone { background: var(--bajo-soft); border: 1.5px solid var(--bajo); }
+.sw-app { background: transparent; border: 1.5px dashed var(--muted); }
+.sw-alt { background: transparent; border: 1.5px dashed var(--bajo); border-radius: 50%; }
+.tabh { font: 800 1.1rem/1.2 "Bricolage Grotesque", Arial, sans-serif; margin: 18px 0 2px; }
+.tab { display: flex; flex-wrap: wrap; gap: 14px 0; font: 14px/1.35 Consolas, "Courier New", monospace; background: var(--soft); border-radius: 10px; padding: 12px 14px; overflow-x: auto; }
+.tb { display: flex; flex-direction: column; }
+.tbh { font-family: "Bricolage Grotesque", Arial, sans-serif; font-weight: 800; padding-left: 2.2ch; min-height: 1.4em; }
+.tr { white-space: pre; }
+.sn { display: inline-block; width: 1.4ch; color: var(--muted); }
+
+.tc { border-radius: 3px; }
+.tc.now { background: var(--bajo); color: #fff; }
+.where { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+.wcell .sh { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.wcell .sh b { font: 800 1.2rem/1 "Bricolage Grotesque", Arial, sans-serif; }
+.wcell .sh span { color: var(--muted); font-size: .9rem; }
+
 .foot { color: var(--muted); font-size: .85rem; padding-top: 18px; padding-bottom: 30px; border-top: 1px solid var(--line); }
 
 @media (max-width: 600px) {
@@ -209,6 +256,9 @@ body[data-view="piano"] .step.playing { background: var(--piano-soft); }
   .slot { width: calc(50% - 4px); }
   .inv-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .inv-grid .cn { grid-column: 1 / -1; }
+  .levels { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .levels .lvl { padding: 8px 10px; }
+  .levels .lvl small { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .step, .mdisplay, .mini-dot { transition: none; } }
 @media print {

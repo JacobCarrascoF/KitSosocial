@@ -1,6 +1,6 @@
 /* Kit Sosocial — service worker: guarda la app para que funcione sin internet.
    IMPORTANTE: cada vez que subas cambios, sube el número de VERSION para que los móviles descarguen la nueva versión. */
-const VERSION = 'kit-sosocial-v1';
+const VERSION = 'kit-sosocial-v2';
 const FILES = [
   './', './index.html', './manifest.webmanifest', './css/estilos.css',
   './js/nucleo/estado.js', './js/nucleo/idioma.js', './js/nucleo/acordes.js', './js/nucleo/audio.js',

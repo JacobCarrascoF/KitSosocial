@@ -8,7 +8,7 @@ Herramientas para las clases de música, pensadas para alumnos que no leen penta
 |---|---|
 | Piano: posición fundamental, inversiones y acordes completos, con notas comunes y el camino más corto | ✅ Fase 1 |
 | Metrónomo: compás, subdivisiones, marcar tempo, cuenta de entrada y entrenador de velocidad | ✅ Fase 1 |
-| Bajo: posiciones en formato C3T3 (cuerda 3, traste 3), camino más corto y niveles | Fase 2 |
+| Bajo: posiciones en formato C3T3 (cuerda 3, traste 3), camino más corto, 4 niveles (fundamental; 1-5-8; arpegio; notas de paso) y tablatura | ✅ Fase 2 |
 | Guitarra: diagramas por niveles (al aire, cejilla, tríadas, acordes de 4 notas) | Fase 3 |
 | Diccionario interactivo de notas y acordes | Fase 4 |
 
@@ -42,7 +42,7 @@ Una vez instalada funciona sin internet.
 ## Actualizar la app
 
 1. Sube los archivos nuevos al repositorio (sustituyendo los antiguos).
-2. **Importante:** en `sw.js`, cambia `const VERSION = 'kit-sosocial-v1';` por `v2`, `v3`… cada vez. Si no, los móviles que ya la tienen instalada seguirán viendo la versión anterior.
+2. **Importante:** en `sw.js`, sube el número de `const VERSION = 'kit-sosocial-vN';` (v2, v3, v4…) cada vez. Si no, los móviles que ya la tienen instalada seguirán viendo la versión anterior.
 
 ## Probarla en el ordenador sin subirla
 
