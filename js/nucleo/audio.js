@@ -7,14 +7,42 @@
     master.gain.value = 0.8;
     master.connect(out);
   }
+  // iPhone/iPad: por defecto el sonido web se silencia con el interruptor de silencio (o el botón de Acción).
+  // 1) En iOS 17+ basta con declarar la sesión de audio como "reproducción".
+  // 2) En versiones anteriores, reproducir un audio mudo en bucle cambia la sesión al mismo modo.
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  let unlocked = false;
+  function silentWavUrl() {
+    const n = 4410, b = new ArrayBuffer(44 + n * 2), v = new DataView(b);
+    const w = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
+    w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true);
+    v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, 44100, true); v.setUint32(28, 88200, true);
+    v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
+    return URL.createObjectURL(new Blob([b], { type: 'audio/wav' }));
+  }
+  function unlockIOS() {
+    if (unlocked) return;
+    unlocked = true;
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+    if (!isIOS) return;
+    try {
+      const el = document.createElement('audio');
+      el.src = silentWavUrl(); el.loop = true; el.setAttribute('playsinline', ''); el.volume = 0.01;
+      const p = el.play(); if (p && p.catch) p.catch(() => {});
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') { const q = el.play(); if (q && q.catch) q.catch(() => {}); } });
+    } catch (e) {}
+  }
+  ['touchend', 'click', 'keydown'].forEach(ev => document.addEventListener(ev, () => { unlockIOS(); if (ac && ac.state !== 'running') ac.resume(); }, { capture: true, passive: true }));
+
   function ctx() {
+    unlockIOS();
     if (!ac) {
       ac = new (window.AudioContext || window.webkitAudioContext)();
       out = ac.createDynamicsCompressor();
       out.connect(ac.destination);
       newMaster();
     }
-    if (ac.state === 'suspended') ac.resume();
+    if (ac.state !== 'running') ac.resume();
     return ac;
   }
   function tone(m, t, d, vol) {
