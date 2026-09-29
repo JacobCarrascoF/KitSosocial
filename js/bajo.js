@@ -122,14 +122,14 @@
         const key = x.tag + lab(x.p);
         if (seen.has(key)) return;
         seen.add(key);
-        const flat = x.tag === '→' ? !x.p.below : ch.flat;
+        const flat = x.tag === '→' ? !x.p.below : ch;
         chips.push(`<span class="chip t${x.tag === '→' ? 'a' : x.tag}"><b>${x.tag}</b> ${noteLbl(x.p, flat)}</span>`);
       });
       const alts = opts.alts ? posOfPc(ch.bassPc).filter(p => lab(p) !== lab(a.p)) : null;
       const sel = opts.custom
         ? '<div class="invbtns">' + posOfPc(ch.bassPc).map((p, i) => `<button type="button" data-bk="${k}" data-bi="${i}" class="${lab(p) === lab(a.p) ? 'on' : ''}">${lab(p)}</button>`).join('') + '</div>'
         : '';
-      const extra = ch.slash ? `<span>${t('slash_note', { n: KS.noteName(ch.bassPc, ch.flat) })}</span>` : '';
+      const extra = ch.slash ? `<span>${t('slash_note', { n: KS.noteName(ch.bassPc, ch) })}</span>` : '';
       return `<div class="step bstep"><div class="sh"><b>${ch.sym}</b>${extra}</div>
         <button type="button" class="kbbtn" data-bplay="${k}" aria-label="${t('play')} ${ch.sym}">${fretboard(seq, alts)}</button>
         <div class="chips">${chips.join('')}</div>${sel}
@@ -238,7 +238,7 @@
 
     h += `<section><h2>${t('b_where')}</h2><p class="sub">${t('b_where_desc')}</p><div class="where">` + chs.map(ch => {
       const ps = posOfPc(ch.bassPc);
-      return `<div class="wcell"><div class="sh"><b>${ch.sym}</b><span>${KS.noteName(ch.bassPc, ch.flat)}</span></div>
+      return `<div class="wcell"><div class="sh"><b>${ch.sym}</b><span>${KS.noteName(ch.bassPc, ch)}</span></div>
         <div class="fbwrap">${fretboard(ps.map(p => ({ tag: '1', p })), null)}</div>
         <div class="chips">${ps.map(p => `<button type="button" class="chip t1" data-m="${p.m}">${lab(p)}</button>`).join('')}</div></div>`;
     }).join('') + '</div></section>';

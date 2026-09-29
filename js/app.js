@@ -20,6 +20,7 @@
   }
   function renderView() {
     view.onclick = null;
+    view.onchange = null;
     KS.views[current].render(view);
   }
   window.addEventListener('hashchange', () => { route(); window.scrollTo(0, 0); });
@@ -140,6 +141,13 @@
     if (current) renderView();
   }
   document.querySelectorAll('[data-lang]').forEach(b => b.onclick = () => setLang(b.dataset.lang));
+
+  /* ---------- Donaciones (se activa en js/nucleo/config.js) ---------- */
+  const url = (KS.CONFIG && KS.CONFIG.donar) || '';
+  if (url && (!url.includes('TU-USUARIO') || window.KS_PREVIEW)) {
+    document.getElementById('supportLink').href = url.includes('TU-USUARIO') ? 'https://ko-fi.com' : url;
+    document.getElementById('support').hidden = false;
+  }
 
   /* ---------- Arranque ---------- */
   setLang(st.lang);

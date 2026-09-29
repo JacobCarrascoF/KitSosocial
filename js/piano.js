@@ -82,9 +82,9 @@
     if (prev.length === cur.length) pairs = cur.map((m, i) => [prev[i], m]);
     else pairs = cur.map(m => { let b = prev[0]; prev.forEach(p => { if (Math.abs(p - m) < Math.abs(b - m)) b = p; }); return [b, m]; });
     return pairs.reverse().map(([a, b]) => {
-      if (a === b) return `<div class="held">${t('held', { n: KS.noteName(b % 12, cch.flat) })}</div>`;
+      if (a === b) return `<div class="held">${t('held', { n: KS.noteName(b % 12, cch) })}</div>`;
       const d = b - a;
-      return `<div>${t(d > 0 ? 'up' : 'down', { a: KS.noteName(a % 12, pch.flat), b: KS.noteName(b % 12, cch.flat) })} <span class="dist">(${Math.abs(d)})</span></div>`;
+      return `<div>${t(d > 0 ? 'up' : 'down', { a: KS.noteName(a % 12, pch), b: KS.noteName(b % 12, cch) })} <span class="dist">(${Math.abs(d)})</span></div>`;
     }).join('');
   }
   const notesHTML = (n, common, flat) =>
@@ -96,13 +96,13 @@
       const common = k ? ch.pcs.filter(p => chs[k - 1].pcs.includes(p)) : [];
       const extra = [t('inv_' + c.inv)];
       if (ch.simplified) extra.push(t('simplified'));
-      if (lh()) extra.push(t('bass_lbl', { n: KS.noteName(ch.bassPc, ch.flat) }));
+      if (lh()) extra.push(t('bass_lbl', { n: KS.noteName(ch.bassPc, ch) }));
       const inv = custom
         ? '<div class="invbtns">' + ch.pcs.map((_, i) => `<button type="button" data-k="${k}" data-inv="${i}" class="${i === c.inv ? 'on' : ''}" aria-label="${t('inv_' + i)}">${t('invs_' + i)}</button>`).join('') + '</div>'
         : '';
       return `<div class="step"><div class="sh"><b>${ch.sym}</b><span>${extra.join('<br>')}</span></div>
         <button type="button" class="kbbtn" data-play="${k}" aria-label="${t('play')} ${ch.sym}">${keyboard(c.n, common, bassMidi(ch))}</button>
-        <div class="notes">${notesHTML(c.n, common, ch.flat)}</div>${inv}
+        <div class="notes">${notesHTML(c.n, common, ch)}</div>${inv}
         <div class="mv">${prev ? movesHTML(prev.n, c.n, chs[k - 1], ch) : t('start_point')}</div></div>`;
     }).join('');
   }
@@ -204,7 +204,7 @@
         return `<div class="inv-grid"><div class="cn"><b>${c.sym}</b><span>${KS.chordName(c)}</span></div>` +
           c.pcs.map((_, i) => {
             const v = nearestOfInv(c, i, null);
-            return `<div class="cell"><div class="lbl">${t('inv_' + i)}</div><button type="button" class="kbbtn" data-ai="${k}-${i}" aria-label="${t('play')} ${c.sym} ${t('inv_' + i)}">${keyboard(v.n, common, bassMidi(c))}</button><div class="notes">${notesHTML(v.n, common, c.flat)}</div></div>`;
+            return `<div class="cell"><div class="lbl">${t('inv_' + i)}</div><button type="button" class="kbbtn" data-ai="${k}-${i}" aria-label="${t('play')} ${c.sym} ${t('inv_' + i)}">${keyboard(v.n, common, bassMidi(c))}</button><div class="notes">${notesHTML(v.n, common, c)}</div></div>`;
           }).join('') + '</div>';
       }).join('') + '</section>';
       el._chs = chs; el._bestTot = list[0].t;

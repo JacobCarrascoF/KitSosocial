@@ -49,6 +49,58 @@
     lp.connect(g); g.connect(master);
     o.start(when); o2.start(when); o.stop(when + dur + 0.05); o2.stop(when + dur + 0.05);
   }
+  function pluck(m, t, d, vol) {
+    const f = 440 * Math.pow(2, (m - 69) / 12);
+    const o = ac.createOscillator(), o2 = ac.createOscillator(), lp = ac.createBiquadFilter(), g = ac.createGain(), g2 = ac.createGain();
+    o.type = 'sawtooth'; o.frequency.value = f; o2.type = 'triangle'; o2.frequency.value = f * 2; g2.gain.value = 0.3;
+    lp.type = 'lowpass'; lp.Q.value = 0.7;
+    lp.frequency.setValueAtTime(3200, t); lp.frequency.exponentialRampToValueAtTime(700, t + 0.35);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.004); g.gain.exponentialRampToValueAtTime(0.0008, t + d);
+    o.connect(lp); o2.connect(g2); g2.connect(lp); lp.connect(g); g.connect(master);
+    o.start(t); o2.start(t); o.stop(t + d + 0.05); o2.stop(t + d + 0.05);
+  }
+  // Rasgueo de guitarra: las notas de grave a agudo con un pequeño desfase (o al revés si up = true)
+  function strum(notes, t, d, up) {
+    ctx();
+    const when = t == null ? ac.currentTime : t, dur = d || 2;
+    const list = up ? notes.slice().reverse() : notes;
+    list.forEach((m, i) => pluck(m, when + i * 0.016, dur, 0.06));
+  }
+  // Batería sintetizada
+  let noiseBuf = null;
+  function noise() {
+    if (!noiseBuf) {
+      noiseBuf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
+      const d = noiseBuf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    }
+    const src = ac.createBufferSource(); src.buffer = noiseBuf; return src;
+  }
+  function sweep(t, f0, f1, dur, vol) {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur * 0.5);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t + dur + 0.05);
+  }
+  function hiss(t, type, freq, dur, vol) {
+    const n = noise(), f = ac.createBiquadFilter(), g = ac.createGain();
+    f.type = type; f.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    n.connect(f); f.connect(g); g.connect(master); n.start(t); n.stop(t + dur + 0.05);
+  }
+  function drum(kind, t) {
+    ctx();
+    const w = t == null ? ac.currentTime : t;
+    if (kind === 'kick') sweep(w, 150, 45, 0.35, 0.9);
+    else if (kind === 'snare') { hiss(w, 'highpass', 1500, 0.2, 0.5); sweep(w, 220, 160, 0.12, 0.35); }
+    else if (kind === 'hh') hiss(w, 'highpass', 7000, 0.05, 0.35);
+    else if (kind === 'hho') hiss(w, 'highpass', 7000, 0.4, 0.3);
+    else if (kind === 'tom1') sweep(w, 260, 170, 0.4, 0.6);
+    else if (kind === 'tom2') sweep(w, 200, 130, 0.45, 0.6);
+    else if (kind === 'ft') sweep(w, 140, 85, 0.55, 0.7);
+    else if (kind === 'crash') hiss(w, 'highpass', 4500, 1.4, 0.35);
+    else if (kind === 'ride') { hiss(w, 'bandpass', 8000, 0.7, 0.4); sweep(w, 3200, 3100, 0.5, 0.05); }
+  }
   // nivel: 2 = primer tiempo, 1.5 = acento secundario, 1 = pulso, 0 = subdivisión
   function click(t, level) {
     const o = ac.createOscillator(), g = ac.createGain();
@@ -68,7 +120,7 @@
     setTimeout(() => { try { old.disconnect(); } catch (e) {} }, 200);
     newMaster();
   }
-  KS.audio = { ctx, chord, bass, click, hush };
+  KS.audio = { ctx, chord, bass, strum, drum, click, hush };
 
   /* ---------- Transporte: un único reloj para el metrónomo y para escuchar progresiones ---------- */
   const T = { playing: false, mode: null, owner: null };
@@ -99,8 +151,11 @@
             const m = s.seq[within];
             if (m != null) bass(m, t, 60 / st.bpm * 0.92);
             ui(t, () => { if (opts && opts.onBeat) opts.onBeat(k, within); });
+          } else if (s.strum && s.every) {
+            strum(s.notes, t, 60 / st.bpm * 0.95, beat % 2 === 1);
           } else if (within === 0) {
-            chord(s.notes, s.bass, t, st.barsPerChord * st.beats * 60 / st.bpm * 0.97);
+            const d = st.barsPerChord * st.beats * 60 / st.bpm * 0.97;
+            if (s.strum) strum(s.notes, t, d); else chord(s.notes, s.bass, t, d);
           }
         }
       }

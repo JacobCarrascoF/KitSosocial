@@ -1,6 +1,7 @@
 /* Kit Sosocial — estado compartido, guardado local y eventos */
 window.KS = window.KS || {};
 (function (KS) {
+  KS.CONFIG = KS.CONFIG || {};
   const KEY = 'kit-sosocial-v1';
   const DEF = {
     chords: ['C', 'F', 'G', 'C'],
@@ -17,7 +18,8 @@ window.KS = window.KS || {};
     barsPerChord: 1,
     trainer: { on: false, to: 120, step: 5, every: 4 },
     piano: { level: 2, lh: false },
-    bajo: { level: 1, up8: false }
+    bajo: { level: 1, up8: false },
+    guitarra: { levels: [1, 2], every: false }
   };
   const clone = o => JSON.parse(JSON.stringify(o));
   const st = clone(DEF);

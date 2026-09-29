@@ -9,10 +9,32 @@
 
   KS.NOTES = { EN_S, EN_F, LA_S, LA_F };
 
-  // Nombre de una nota (0-11) según la preferencia: 'lat' (Do), 'en' (C) o 'both'
-  KS.noteName = (pc, flat, mode) => {
+  // Ortografía según el acorde: en C7 la séptima es Bb (Sib) y no A#; en Caug la quinta es G# (Sol#)
+  const LETTERS = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+  const DEGREE = { 0: 1, 1: 2, 2: 2, 3: 3, 4: 3, 5: 4, 6: 5, 7: 5, 8: 5, 9: 6, 10: 7, 11: 7 };
+  function spell(pc, ch) {
+    if (!ch || !ch.rootName || !ch.pcs || !ch.pcs.includes(pc)) return null;
+    const deg = DEGREE[(pc - ch.root + 12) % 12];
+    const letter = LETTERS[(LETTERS.indexOf(ch.rootName[0]) + deg - 1) % 7];
+    let acc = ((pc - LETTER[letter]) % 12 + 12) % 12;
+    if (acc > 6) acc -= 12;
+    if (Math.abs(acc) > 1) return null;
+    const a = acc === 1 ? '#' : acc === -1 ? 'b' : '';
+    if (['Cb', 'Fb', 'E#', 'B#'].includes(letter + a)) return null; // más claro para el alumnado: Si en lugar de Dob
+    return { en: letter + a, la: LA_LETTER[letter] + a };
+  }
+
+  // Nombre de una nota (0-11) según la preferencia: 'lat' (Do), 'en' (C) o 'both'.
+  // El segundo parámetro puede ser true/false (bemoles o sostenidos) o el acorde al que pertenece la nota.
+  KS.noteName = (pc, ctx, mode) => {
     mode = mode || KS.state.noteNames;
-    const en = (flat ? EN_F : EN_S)[pc], la = (flat ? LA_F : LA_S)[pc];
+    let en, la;
+    const sp = (ctx && typeof ctx === 'object') ? spell(pc, ctx) : null;
+    if (sp) { en = sp.en; la = sp.la; }
+    else {
+      const flat = (ctx && typeof ctx === 'object') ? ctx.flat : !!ctx;
+      en = (flat ? EN_F : EN_S)[pc]; la = (flat ? LA_F : LA_S)[pc];
+    }
     return mode === 'en' ? en : mode === 'both' ? la + ' (' + en + ')' : la;
   };
   KS.latRoot = r => LA_LETTER[r[0]] + r.slice(1);
@@ -105,7 +127,7 @@
       const n = list[(k + 1) % list.length];
       const com = c.pcs.filter(p => n.pcs.includes(p));
       const lk = com.length
-        ? '<span class="cm">' + com.map(p => `<b>${KS.noteName(p, n.flat)}</b>`).join('') + '</span>'
+        ? '<span class="cm">' + com.map(p => `<b>${KS.noteName(p, n)}</b>`).join('') + '</span>'
         : `<i>${KS.t('none')}</i>`;
       h += `<span class="link">${lk}<span class="arrow" aria-hidden="true">${k === list.length - 1 ? '↩' : '→'}</span></span>`;
     });

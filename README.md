@@ -9,8 +9,8 @@ Herramientas para las clases de música, pensadas para alumnos que no leen penta
 | Piano: posición fundamental, inversiones y acordes completos, con notas comunes y el camino más corto | ✅ Fase 1 |
 | Metrónomo: compás, subdivisiones, marcar tempo, cuenta de entrada y entrenador de velocidad | ✅ Fase 1 |
 | Bajo: posiciones en formato C3T3 (cuerda 3, traste 3), camino más corto, 4 niveles (fundamental; 1-5-8; arpegio; notas de paso) y tablatura | ✅ Fase 2 |
-| Guitarra: diagramas por niveles (al aire, cejilla, tríadas, acordes de 4 notas) | Fase 3 |
-| Diccionario interactivo de notas y acordes | Fase 4 |
+| Guitarra: diagramas por niveles combinables (al aire, cejilla, tríadas, acordes de 4 notas), notas comunes, dedos que se quedan y camino más cómodo | ✅ Fase 3 |
+| Diccionario interactivo: notas, acordes (con sonido), figuras rítmicas, mástiles de guitarra y bajo, teclado, batería que suena y vocabulario con buscador | ✅ Fase 4 |
 
 La progresión de acordes se escribe una sola vez arriba y la usan todos los instrumentos.
 
@@ -38,6 +38,14 @@ Al abrirlo, la app aparece directamente con esa progresión.
 - **iPhone / iPad (Safari):** abre el enlace, pulsa el botón de compartir y elige **Añadir a pantalla de inicio**.
 
 Una vez instalada funciona sin internet.
+
+## Activar las donaciones (Ko-fi)
+
+1. Abre `js/nucleo/config.js` (en GitHub: pulsa el archivo y luego el lápiz ✏️ para editarlo).
+2. Cambia `TU-USUARIO` por tu usuario de Ko-fi, por ejemplo `'https://ko-fi.com/sosocial'`.
+3. Pulsa **Commit changes** y sube la versión en `sw.js`.
+
+El botón «Apoyar en Ko-fi» aparece al pie de todas las secciones. Mientras ponga `TU-USUARIO`, no se muestra.
 
 ## Actualizar la app
 
