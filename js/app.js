@@ -1,7 +1,7 @@
 /* Kit Sosocial — arranque: pestañas, barra de progresión, mini metrónomo, idioma y compartir */
 (function (KS) {
   const t = KS.t, st = KS.state;
-  const TABS = ['diccionario', 'piano', 'guitarra', 'bajo', 'metronomo'];
+  const TABS = ['diccionario', 'piano', 'guitarra', 'bajo', 'bateria', 'metronomo'];
   const view = document.getElementById('view');
   let current = null;
 
@@ -15,7 +15,7 @@
       const on = a.getAttribute('href') === '#' + name;
       if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
-    document.getElementById('progBar').hidden = name === 'metronomo' || name === 'diccionario';
+    document.getElementById('progBar').hidden = ['metronomo', 'diccionario', 'bateria'].includes(name);
     renderView();
   }
   function renderView() {

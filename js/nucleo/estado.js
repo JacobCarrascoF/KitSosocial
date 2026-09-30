@@ -19,7 +19,8 @@ window.KS = window.KS || {};
     trainer: { on: false, to: 120, step: 5, every: 4 },
     piano: { level: 2, lh: false },
     bajo: { level: 1, up8: false },
-    guitarra: { levels: [1, 2], every: false }
+    guitarra: { levels: [1, 2], every: false },
+    bateria: { level: 1, ex: 0, left: false }
   };
   const clone = o => JSON.parse(JSON.stringify(o));
   const st = clone(DEF);

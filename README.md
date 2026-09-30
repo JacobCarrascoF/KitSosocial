@@ -8,6 +8,7 @@ Herramientas para las clases de música, pensadas para alumnos que no leen penta
 |---|---|
 | Piano: posición fundamental, inversiones y acordes completos, con notas comunes y el camino más corto | ✅ Fase 1 |
 | Metrónomo: compás, subdivisiones, marcar tempo, cuenta de entrada y entrenador de velocidad | ✅ Fase 1 |
+| Batería: rudimentos para pad en 3 niveles (golpes simples y dobles, acentos, paradiddles, flams) que suenan con el metrónomo | ✅ |
 | Bajo: posiciones en formato C3T3 (cuerda 3, traste 3), camino más corto, 4 niveles (fundamental; 1-5-8; arpegio; notas de paso) y tablatura | ✅ Fase 2 |
 | Guitarra: diagramas por niveles combinables (al aire, cejilla, tríadas, acordes de 4 notas), notas comunes, dedos que se quedan y camino más cómodo | ✅ Fase 3 |
 | Diccionario interactivo: notas, acordes (con sonido), figuras rítmicas, mástiles de guitarra y bajo, teclado, batería que suena y vocabulario con buscador | ✅ Fase 4 |

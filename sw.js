@@ -1,10 +1,10 @@
 /* Kit Sosocial — service worker: guarda la app para que funcione sin internet.
    IMPORTANTE: cada vez que subas cambios, sube el número de VERSION para que los móviles descarguen la nueva versión. */
-const VERSION = 'kit-sosocial-v10';
+const VERSION = 'kit-sosocial-v11';
 const FILES = [
   './', './index.html', './manifest.webmanifest', './css/estilos.css',
   './js/nucleo/config.js', './js/nucleo/sha256.js', './js/nucleo/estado.js', './js/nucleo/idioma.js', './js/nucleo/acordes.js', './js/nucleo/audio.js',
-  './js/metronomo.js', './js/piano.js', './js/guitarra.js', './js/bajo.js', './js/diccionario.js', './js/app.js',
+  './js/metronomo.js', './js/piano.js', './js/guitarra.js', './js/bajo.js', './js/bateria.js', './js/diccionario.js', './js/app.js',
   './iconos/icono-192.png', './iconos/icono-512.png'
 ];
 

@@ -129,6 +129,21 @@
     else if (kind === 'crash') hiss(w, 'highpass', 4500, 1.4, 0.35);
     else if (kind === 'ride') { hiss(w, 'bandpass', 8000, 0.7, 0.4); sweep(w, 3200, 3100, 0.5, 0.05); }
   }
+  // Pad de práctica: golpe corto; la derecha suena un poco más aguda y a la derecha del estéreo
+  function pad(t, accent, hand, grace) {
+    ctx();
+    const w = t == null ? ac.currentTime : t;
+    const n = noise(), f = ac.createBiquadFilter(), g = ac.createGain();
+    f.type = 'bandpass'; f.Q.value = 1.2; f.frequency.value = hand === 'L' ? 1500 : 1800;
+    const vol = grace ? 0.12 : accent ? 0.75 : 0.26;
+    g.gain.setValueAtTime(vol, w); g.gain.exponentialRampToValueAtTime(0.001, w + (accent ? 0.09 : 0.06));
+    n.connect(f); f.connect(g);
+    let out = g;
+    if (ac.createStereoPanner) { const pn = ac.createStereoPanner(); pn.pan.value = hand === 'L' ? -0.35 : 0.35; g.connect(pn); out = pn; }
+    out.connect(master);
+    n.start(w); n.stop(w + 0.12);
+    sweep(w, hand === 'L' ? 420 : 470, 300, 0.05, vol * 0.4);
+  }
   // nivel: 2 = primer tiempo, 1.5 = acento secundario, 1 = pulso, 0 = subdivisión
   function click(t, level) {
     const o = ac.createOscillator(), g = ac.createGain();
@@ -148,7 +163,7 @@
     setTimeout(() => { try { old.disconnect(); } catch (e) {} }, 200);
     newMaster();
   }
-  KS.audio = { ctx, chord, bass, strum, drum, click, hush };
+  KS.audio = { ctx, chord, bass, strum, drum, pad, click, hush };
 
   /* ---------- Transporte: un único reloj para el metrónomo y para escuchar progresiones ---------- */
   const T = { playing: false, mode: null, owner: null };
@@ -190,10 +205,20 @@
     } else if (T.mode === 'metro') {
       click(t, 0);
     }
+    if (T.mode === 'pad' && !counting) {
+      const per = opts.perBeat, pat = opts.pattern;
+      const idx = (((bar - T.countInBars) * st.beats + beat) * per + sub) % pat.length;
+      const nt = pat[idx];
+      if (nt && nt.h) {
+        if (nt.flam) pad(t - 0.028, false, nt.h === 'R' ? 'L' : 'R', true);
+        pad(t, nt.acc, nt.h);
+      }
+      ui(t, () => { if (opts && opts.onNote) opts.onNote(idx); });
+    }
   }
   function advance() {
     const st = KS.state;
-    const spb = T.mode === 'metro' ? st.subdiv : 1;
+    const spb = T.mode === 'metro' ? st.subdiv : T.mode === 'pad' ? opts.perBeat : 1;
     next += 60 / st.bpm / spb;
     sub++;
     if (sub < spb) return;
